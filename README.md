@@ -21,11 +21,15 @@ Game Breakout/Brick Breaker klasik yang dibuat dengan React Native dan Expo. Han
 
 - 🎯 **Gameplay Klasik**: Game Breakout yang menyenangkan dan adiktif
 - 🎨 **Visual Menarik**: Desain modern dengan warna-warna cerah
-- 📊 **Sistem Skor**: Skor dan skor tertinggi yang tersimpan
-- 🎮 **Level System**: Level meningkat otomatis saat semua bata hancur
+- 📊 **Sistem Skor & Leaderboard**: Skor tersimpan dengan nama player dan riwayat permainan
+- 🎮 **Level System**: Level meningkat otomatis dengan pola bata yang berbeda setiap level
+- ⚙️ **Pengaturan Kesulitan**: Pilih tingkat kesulitan (Mudah, Sedang, Sulit) yang mempengaruhi kecepatan bola
+- 👤 **Manajemen Player**: Buat dan ganti nama player dengan mudah
 - 📱 **Responsif**: Dapat dimainkan di Android, iOS, dan Web
 - 🎪 **Kontrol Mudah**: Geser jari untuk menggerakkan papan
 - 🌈 **Bata Berwarna**: Setiap baris bata memiliki warna berbeda
+- 💾 **Penyimpanan Lokal**: Data player dan skor tersimpan menggunakan AsyncStorage
+- 📝 **Kode Terdokumentasi**: Semua kode memiliki komentar bahasa Indonesia yang informatif
 
 ## 🛠 Teknologi yang Digunakan
 
@@ -34,6 +38,10 @@ Game Breakout/Brick Breaker klasik yang dibuat dengan React Native dan Expo. Han
 - **TypeScript**: Bahasa pemrograman dengan type safety
 - **Animated API**: Untuk animasi yang halus
 - **React Hooks**: Untuk manajemen state
+- **AsyncStorage**: Untuk penyimpanan data lokal (player, skor, pengaturan)
+- **Expo Router**: Untuk navigasi berbasis file system
+- **React Navigation**: Untuk navigasi tab dan stack
+- **Expo Haptics**: Untuk feedback haptic di iOS
 
 ## 📦 Persyaratan
 
@@ -51,6 +59,8 @@ Sebelum memulai, pastikan Anda telah menginstall:
    git clone https://github.com/edisuherlan/game-tetris-pemecah_bata-sederhana.git
    cd game-tetris-pemecah_bata-sederhana
    ```
+   
+   **Catatan**: Nama folder lokal mungkin berbeda (misalnya `game_sederhana`), sesuaikan dengan struktur proyek Anda.
 
 2. **Install dependencies**
    ```bash
@@ -116,18 +126,33 @@ npm run web
 ## 📁 Struktur Proyek
 
 ```
-game-tetris-pemecah_bata-sederhana/
+game_sederhana/
 ├── app/
 │   ├── (tabs)/
-│   │   └── index.tsx          # File utama game
-│   └── _layout.tsx            # Layout aplikasi
-├── assets/                    # Gambar dan resources
-├── components/                # Komponen reusable
-├── constants/                 # Konstanta aplikasi
-├── hooks/                     # Custom hooks
-├── package.json              # Dependencies
-├── tsconfig.json             # Konfigurasi TypeScript
-└── README.md                 # Dokumentasi
+│   │   ├── index.tsx          # File utama game
+│   │   ├── leaderboard.tsx    # Halaman leaderboard
+│   │   ├── settings.tsx        # Halaman pengaturan game
+│   │   ├── info.tsx            # Halaman info developer
+│   │   └── _layout.tsx         # Layout tab navigation
+│   ├── _layout.tsx             # Root layout aplikasi
+│   └── modal.tsx                # Screen modal contoh
+├── components/
+│   ├── PlayerForm.tsx          # Form untuk input/ganti nama player
+│   ├── themed-view.tsx         # View component dengan theme support
+│   ├── themed-text.tsx         # Text component dengan theme support
+│   ├── external-link.tsx       # Link component untuk browser in-app
+│   ├── haptic-tab.tsx          # Tab button dengan haptic feedback
+│   ├── hello-wave.tsx          # Komponen animasi wave
+│   ├── parallax-scroll-view.tsx # ScrollView dengan efek parallax
+│   └── ui/
+│       └── icon-symbol.tsx     # Icon component dengan mapping SF Symbols
+├── utils/
+│   └── database.ts             # Fungsi database untuk AsyncStorage
+├── hooks/                      # Custom hooks
+├── assets/                     # Gambar dan resources
+├── package.json               # Dependencies
+├── tsconfig.json              # Konfigurasi TypeScript
+└── README.md                  # Dokumentasi
 ```
 
 ## 🎯 Fitur Game
@@ -139,11 +164,14 @@ game-tetris-pemecah_bata-sederhana/
 - **Sudut Pantulan**: Sudut pantulan berdasarkan posisi tumbukan di papan
 - **Kecepatan Dinamis**: Kecepatan bola tetap konsisten untuk gameplay yang adil
 
-### Sistem Skor
+### Sistem Skor & Leaderboard
 
 - **Skor**: +10 poin per bata yang hancur
-- **Skor Tertinggi**: Tersimpan otomatis selama sesi permainan
-- **Level**: Meningkat otomatis saat semua bata hancur
+- **Leaderboard**: Menampilkan semua player dengan skor tertinggi mereka
+- **Riwayat Permainan**: Setiap sesi permainan tersimpan dengan timestamp
+- **Manajemen Player**: Buat player baru atau ganti nama player yang sudah ada
+- **Penyimpanan Persisten**: Data tersimpan menggunakan AsyncStorage dan tidak hilang saat aplikasi ditutup
+- **Level**: Meningkat otomatis saat semua bata hancur dengan pola bata yang berbeda setiap level
 
 ### Visual Design
 
@@ -158,6 +186,17 @@ game-tetris-pemecah_bata-sederhana/
 
 ## 🎨 Konfigurasi Game
 
+### Pengaturan Kesulitan
+
+Anda dapat mengubah tingkat kesulitan di halaman **Pengaturan**:
+- **Mudah**: Kecepatan bola 4 (cocok untuk pemula)
+- **Sedang**: Kecepatan bola 6 (tingkat menengah)
+- **Sulit**: Kecepatan bola 8 (tantangan untuk pemain berpengalaman)
+
+Pengaturan tersimpan otomatis dan diterapkan saat kembali ke game.
+
+### Konstanta Game
+
 Anda dapat mengubah konstanta game di file `app/(tabs)/index.tsx`:
 
 ```typescript
@@ -168,7 +207,7 @@ const BRICK_WIDTH = 70;            // Lebar bata
 const BRICK_HEIGHT = 30;           // Tinggi bata
 const BRICK_ROWS = 5;              // Jumlah baris bata
 const BRICK_COLS = 5;              // Jumlah kolom bata
-const BALL_SPEED = 6;              // Kecepatan bola
+const DEFAULT_BALL_SPEED = 6;      // Kecepatan bola default
 ```
 
 ## 🐛 Troubleshooting
@@ -208,7 +247,19 @@ Kontribusi sangat diterima! Jika Anda ingin berkontribusi:
 
 ## 📝 Changelog
 
-### Version 1.0.0 (Current)
+### Version 2.0.0 (Current)
+- ✅ **Leaderboard System**: Sistem leaderboard dengan penyimpanan data player
+- ✅ **Pengaturan Kesulitan**: Pilih tingkat kesulitan (Mudah, Sedang, Sulit)
+- ✅ **Manajemen Player**: Buat dan ganti nama player
+- ✅ **Level System**: Pola bata berbeda setiap level dengan tingkat kesulitan meningkat
+- ✅ **Halaman Info**: Halaman informasi developer
+- ✅ **Penyimpanan Persisten**: Data tersimpan menggunakan AsyncStorage
+- ✅ **Kode Terdokumentasi**: Semua kode memiliki komentar bahasa Indonesia yang informatif
+- ✅ **Watermark Developer**: Watermark developer di setiap file kode
+- ✅ **Collision Detection**: Deteksi tabrakan yang lebih akurat untuk paddle
+- ✅ **UI Improvements**: Perbaikan UI dan UX dengan haptic feedback
+
+### Version 1.0.0
 - ✅ Gameplay dasar Breakout
 - ✅ Sistem skor dan level
 - ✅ Kontrol dengan geser jari
@@ -221,9 +272,12 @@ Proyek ini menggunakan lisensi MIT. Lihat file `LICENSE` untuk detail lebih lanj
 
 ## 👤 Author
 
-**Edisuherlan**
-- GitHub: [@edisuherlan](https://github.com/edisuherlan)
-- Repository: [game-tetris-pemecah_bata-sederhana](https://github.com/edisuherlan/game-tetris-pemecah_bata-sederhana)
+**Edi Suherlan**
+- **Nama**: Edi Suherlan
+- **GitHub**: [@edisuherlan](https://github.com/edisuherlan)
+- **Email**: audhighasu@gmail.com
+- **Website**: [audhighasu.com](https://audhighasu.com)
+- **Repository**: [game-tetris-pemecah_bata-sederhana](https://github.com/edisuherlan/game-tetris-pemecah_bata-sederhana)
 
 ## 🙏 Acknowledgments
 
