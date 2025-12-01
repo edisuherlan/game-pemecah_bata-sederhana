@@ -4,17 +4,15 @@ Game Breakout/Brick Breaker klasik yang dibuat dengan React Native dan Expo. Han
 
 ## 📸 Screenshot Aplikasi
 
-### Halaman Game
-![Game Screen](./assets/screenshots/Screenshot_game_20251202_062324.png)
+<div align="center">
+  <img src="./assets/screenshots/Screenshot_game_20251202_062324.png" alt="Game Screen" width="250" />
+  <img src="./assets/screenshots/Screenshot_Leaderboard_20251202_062436.png" alt="Leaderboard Screen" width="250" />
+</div>
 
-### Halaman Leaderboard
-![Leaderboard Screen](./assets/screenshots/Screenshot_Leaderboard_20251202_062436.png)
-
-### Halaman Pengaturan
-![Settings Screen](./assets/screenshots/Screenshot_pengaturan_20251202_062422.png)
-
-### Halaman Info
-![Info Screen](./assets/screenshots/Screenshot_info_20251202_062447.png)
+<div align="center">
+  <img src="./assets/screenshots/Screenshot_pengaturan_20251202_062422.png" alt="Settings Screen" width="250" />
+  <img src="./assets/screenshots/Screenshot_info_20251202_062447.png" alt="Info Screen" width="250" />
+</div>
 
 ## 📋 Daftar Isi
 
